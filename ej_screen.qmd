@@ -1,0 +1,40 @@
+---
+title: EDS 223 Geospatial Analysis and Remote Sensing: Homework 1
+format: HTML 
+
+---
+
+Loading data for Orange County. 
+```{r}
+library(tidyverse)
+library(sf)
+library(here)
+library(tmap)
+library(spData)
+
+# Reading in the database of EJScreen data at the Census Block Group level
+ejscreen <- sf::st_read(here::here("EDS223-HW1", "data", "ejscreen", "EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
+
+# Filtering to a state that I'm interested in
+california <- ejscreen %>% 
+    dplyr::filter(ST_ABBREV == "CA")
+
+# Filter to a county I am interested in 
+orange_county <- ejscreen %>%
+    dplyr::filter(CNTY_NAME %in% c("Orange County"))
+
+# Find the average values for all variables within counties 
+california_counties <- aggregate(california, by = list(california$CNTY_NAME), FUN = mean)
+
+```
+
+First Map: Orange County PM 2.5 
+```{r}
+
+
+
+
+
+```
+
+
