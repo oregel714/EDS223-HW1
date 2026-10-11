@@ -9,9 +9,10 @@ This repo houses code for two maps that display PM 2.5 levels in comparison with
 ```
 EDS223-HW1
 ├── ej_screen_files
+├── .gitignore
+├── README.md
 ├── ej_screen.pdf
-├── ej_screen.qmd
-└── README.md
+└── ej_screen.qmd
 ```
 ### Data Access:
 Data accessed through the restructured EJScreen tool as the former website no longer exists: [EJScreen.](https://www.epa.gov/ejscreen)
