@@ -15,7 +15,7 @@ EDS223-HW1
 └── ej_screen.qmd
 ```
 ### Data Access:
-Data accessed through the restructured EJScreen tool as the former website no longer exists: [EJScreen.](https://www.epa.gov/ejscreen)
+Data accessed through the restructured EJScreen tool as the former website no longer exists: [EJScreen Website.](https://www.epa.gov/ejscreen) Google drive link for ease of access to the EJScreen dataset: [EJScreen Dataset](https://drive.google.com/file/d/1nG6Nj1bXfzQFOVMO8Km3eNy4SWu1YcIQ/view?usp=sharing)
 
 ### Authors: 
 Mark Oregel
