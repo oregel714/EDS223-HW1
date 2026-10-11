@@ -1,40 +1,105 @@
 ---
-title: EDS 223 Geospatial Analysis and Remote Sensing: Homework 1
-format: HTML 
-
+title: "EDS 223 Homework #1"
+subtitle: "Geospatial Analysis & Remote Sensing" 
+author: "Mark Oregel"
+date: 2026-10-10
+format: 
+    pdf: 
+        toc: true
 ---
 
-Loading data for Orange County. 
+
+### Loading in packages:
 ```{r}
+#| warning = FALSE
 library(tidyverse)
 library(sf)
 library(here)
 library(tmap)
 library(spData)
+library(viridisLite)
+```
 
-# Reading in the database of EJScreen data at the Census Block Group level
-ejscreen <- sf::st_read(here::here("EDS223-HW1", "data", "ejscreen", "EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
+### Data Wrangling and Filtering 
+```{r}
+#| warning = FALSE
+# Read in the database of EJScreen data at the Census Block Group level
+ejscreen <- sf::st_read(here::here("data", "ejscreen", "EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
 
-# Filtering to a state that I'm interested in
+# Filter to California 
 california <- ejscreen %>% 
     dplyr::filter(ST_ABBREV == "CA")
 
-# Filter to a county I am interested in 
+# Filter to Orange County 
 orange_county <- ejscreen %>%
     dplyr::filter(CNTY_NAME %in% c("Orange County"))
 
 # Find the average values for all variables within counties 
 california_counties <- aggregate(california, by = list(california$CNTY_NAME), FUN = mean)
 
+# Narrow down to Orange County
+oc <- california |> 
+    filter(
+        CNTY_NAME == 'Orange County' 
+    )
+# Remove missing data row (ocean)
+oc_clean <- oc[-(2049),]
 ```
 
-First Map: Orange County PM 2.5 
+
+## Map #1: Orange County PM 2.5 Levels (Annual Average)
 ```{r}
-
-
-
+#| warning = FALSE
+# Basemap: Orange County boundary 
+tm_shape(oc_clean) +  
+    # Fill in city polygons with 'PM25' data
+    tm_polygons(
+        fill = 'PM25', 
+        fill.scale = tm_scale(values = rev(heat.colors(5))),
+        fill.legend = tm_legend(title = 'PM 2.5 Levels (μg/m³)'
+                                )) + 
+    # Add scalebar
+    tm_scalebar() + 
+    # Add compass with only North arrow 
+    tm_compass(position = c('bottom', 'left')) + 
+    # Adjust border line width
+    tm_borders(lwd = 0.05) + 
+    # Add title 
+    tm_title("Orange County PM 2.5 Levels (Annual Average)")
 
 
 ```
+
+## Map #2: Percentage of People of Color in Orange County 
+```{r}
+#| warning = FALSE
+# Basemap: Orange County boundary 
+tm_shape(oc_clean) + 
+    # Fill in city polygons with 'PEOPCOLORPCT' data
+    tm_polygons(
+        fill = 'PEOPCOLORPCT',
+        fill.scale = tm_scale(values = rev(heat.colors(5))),
+        fill.legend = tm_legend(title = 'Percentage of POC')) + 
+    # Add scalebar
+    tm_scalebar() +
+    # Add compass  
+    tm_compass(position = c('bottom', 'left')) + 
+    # Adjust border line width 
+    tm_borders(lwd = 0.05) + 
+    # Add title
+    tm_title("Percentage of People of Color (POC) in Orange County")
+```
+
+### Map Interpretation: 
+- **PM25**: Levels of PM 2.5 measured using an annual average. 
+
+- **PEOPCOLORPCT**: Percent of people in a census block who designate their racial status as a race other than white alone or list their ethnicity as hispanic/latino. 
+
+Map #1 displays high annual levels of PM 2.5 concentrated primarily within the Northern most census blocks while Southern census blocks experience lower levels. Similarly, Map #2 displays high percentages of POC in the Northern to middle census blocks and lower percentages in the South. The data within these maps suggest that areas within Orange County with high percentages of POC communites are exposed to high levels of PM 2.5 more than areas with low percentages of POC communities. 
+
+### Data Citations: 
+U.S. Environmental Protection Agency (EPA), 2023. EJScreen Technical Documentation. Accessed: October 8th, 2025. 
+**Link:** https://drive.google.com/file/d/1nG6Nj1bXfzQFOVMO8Km3eNy4SWu1YcIQ/view?usp=sharing
+
 
 
